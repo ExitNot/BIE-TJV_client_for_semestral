@@ -116,5 +116,11 @@ function upRate( book ){
 }
 
 function downRate( book ){
+    id = book.id;
     
+    url = `http://localhost:8080/api/v1/books/down?id=${id}`;
+    
+    fetch(url, {
+        method: 'PUT'
+        });
 }
