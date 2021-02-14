@@ -1,22 +1,25 @@
 const create_form = document.querySelector(".create_modal form");
 const search_form = document.getElementById("search_form_id");
-const main = document.querySelector(".main");
 const list = document.getElementsByClassName("list")[0];
+const main = document.querySelector("#main");
 var next_page = 0;
 var previous_page = 0;
 
-// console.log(main.nextbtn);
-
 $(document).ready( () => {
-    get_request( 0 );
+    getRequest( 0 );
 });
+
+
+// var spans = document.getElementsByTagName('span');
+// spans[1].onclick = nextPage();
+// spans[2].onclick = prevPage();
 
 // When the user clicks anywhere outside of the modal, close it
 window.onclick = function(event) {
     const modal = document.getElementById("create_modal_id");
 
     if (event.target == modal) {
-      create_form_close();
+      createFormClose();
     }
   }
 
@@ -59,14 +62,14 @@ search_form.addEventListener("submit", function(e){
     get_request( 0 );
 });
 
-function create_form_close() {
+function createFormClose() {
     document.getElementById('create_modal_id').style.display='none';
 }
 
-async function get_request( page ) {
+async function getRequest( page ) {
     const size = 6;
     var total_elem = 0;
-    const url = `http://localhost:8080/api/v1/books?page=${page}&size=${size}`
+    const url = `http://localhost:8080/api/v1/books?page=${page}&size=${size}`;
 
     fetch(url, {
         method: 'GET',
@@ -85,22 +88,26 @@ async function get_request( page ) {
                 for( i = 0; i < json._embedded.bookDtoList.length; i++ ){
                     create_block(json._embedded.bookDtoList[i]);
                 }
-
-                list_sort( list );
+                listSort( list );
+                total_elem = json.page.totalElements;
             }
+        }).then( () => {
+            // console.log(total_elem, " / ", size);
+            // console.log("total/size", parseInt(total_elem / size));
+
+            if( page < parseInt(total_elem / size) )
+                next_page = page + 1;
+            else
+                next_page = page;
+            if( page == 0 )
+                previous_page = page;
+            else
+                previous_page = page - 1;
+
+            // console.log( next_page, previous_page);
         }).catch( (error) => {
             console.error('Error: ', error);
     });
-    if( page < parseInt(total_elem / size) ){
-        next_page = page + 1;
-    } else{
-        next_page = page;
-    }
-    if( page == 0 ){
-        previous_page = page;
-    } else{
-        previous_page = page - 1;
-    }
 }
 
 function create_block( book_json ){
@@ -111,6 +118,7 @@ function create_block( book_json ){
 
     let li = document.createElement("li");
     li.classList.add("book");
+    // li.onclick = get_book();
     let HTMLbox = `
         <h2 class="name">
             <span>${bookName}#${issueNumber}</span>
@@ -124,7 +132,7 @@ function create_block( book_json ){
     list.appendChild(li);
 }
 
-function list_sort( ul ){
+function listSort( ul ){
     var new_ul = ul.cloneNode(false);
 
     var li_array = [];
@@ -139,9 +147,14 @@ function list_sort( ul ){
                 parseInt(a.getElementsByClassName("satisfactionScore")[0].childNodes[0].innerText , 10);
     });
 
-    for(var i = 0; i < li_array.length; i++)
+    for(var i = 0; i < li_array.length; i++){
         new_ul.appendChild(li_array[i]);
-    ul.parentNode.replaceChild(new_ul, ul);
+    }
+    // console.log(ul.parentNode);
+    // console.log(ul);
+    // console.log(new_ul);
+    // ul.parentNode.replaceChild(new_ul, ul);
+    main.replaceChild(new_ul, main.childNodes[0]);
 }
 
 function upRate( book ){
@@ -162,4 +175,14 @@ function downRate( book ){
     fetch(url, {
         method: 'PUT'
         });
+}
+
+// function get
+
+function nextPage(){
+    getRequest(next_page);
+}
+
+function prevPage(){
+    getRequest(previous_page);
 }

@@ -23,7 +23,7 @@
             </form>
 
             <div id="create_modal_id" class="create_modal">
-                <span onclick="create_form_close();" class="close" title="Close Modal">&times;</span>
+                <span onclick="createFormClose();" class="close" title="Close Modal">&times;</span>
 
                 <form class="create_form" id="create_form_id", enctype="multipart/form-data">
                     <div class="container">
@@ -45,17 +45,20 @@
                         <input type="file" id="img" accept="image/*" />
 
                         <div class="acceptenceButtons">
-                            <button type="button" class="cancelbtn" onclick="create_form_close();">Cancel</button>
+                            <button type="button" class="cancelbtn" onclick="createFormClose();">Cancel</button>
                             <button type="submit" class="submitbtn">Submit</button>
                         </div>
                     </div>
                   </form> 
             </div>
         </section>
-        <main>
+        <div id="main">
             <ul class="list" list-style="null"></ul>
-            <button class="nextbtn" onclick="get_request( next_page );"><i class="fas fa-arrow-alt-circle-right"></i></button>
-            <button class="prevbtn" onclick="get_request( previous_page );"><i class="fas fa-arrow-alt-circle-right fa-rotate-180"></i></button>
-        </main>
+            <span class="prevbtn" onclick="prevPage();" style="float: left;"><i class="fas fa-arrow-alt-circle-right fa-2x fa-rotate-180"></i></button></span>
+            <span class="nextbtn" onclick="nextPage();" style="float: right;"><i class="fas fa-arrow-alt-circle-right fa-2x"></i></button></span>
+        </div>
+        <!-- <main>
+            
+        </main> -->
     </body>
 </html>
