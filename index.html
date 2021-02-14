@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="description" content="Comics platform">
+        <meta name="author" content="Setler / Kostiantyn Kolchenko">
+        <title>Comics depot</title>
+        <link rel="stylesheet" href="style.css" type="text/css">
+        <script src="https://code.jquery.com/jquery-3.5.1.min.js" defer></script>
+        <script type="text/javascript" src="./client_script.js" defer></script>
+        <!-- <link rel="stylesheet" href="style.css" type="text/css"> -->
+    </head>
+    <body>
+        <!-- one more section .roof -->
+        <section class="control">
+            <h1>Comics Depot</h1>
+            <p>place to stock your comics books</p>
+            <form id="search_form_id">
+                <input type="text" placeholder="Search for a book"> 
+                <button type="submit" class="searchbtn">Search</button>
+                <button type="button" class="createbookbtn" onclick="document.getElementById('create_modal_id').style.display='block'">Create book</button>
+            </form>
+
+            <div id="create_modal_id" class="create_modal">
+                <span onclick="create_form_close();" class="close" title="Close Modal">&times;</span>
+
+                <form class="create_form" id="create_form_id", enctype="multipart/form-data">
+                    <div class="container">
+                        <h1>Create book</h1>
+                        <hr>
+                        <label for="bookName"><b>Book Name</b></label>
+                        <input type="text" placeholder="Enter Book Name" id="bookName" required>
+                    
+                        <label for="issueNumber"><b>Issue Number</b></label>
+                        <input type="number" placeholder="Enter Issue Number" id="issueNumber" required>
+                    
+                        <label for="publishDate"><b>Publish Date</b></label>
+                        <input type="text" placeholder="Enter Publish Date" id="publishDate" required>
+                        
+                        <label for="description"><b>Description</b></label>
+                        <input type="text" placeholder="Enter Description" id="description" required>
+                    
+                        <label for="imgUpload"><b>Upload your image</b></label>
+                        <input type="file" id="img" accept="image/*" />
+
+                        <div class="acceptenceButtons">
+                            <button type="button" class="cancelbtn" onclick="create_form_close();">Cancel</button>
+                            <button type="submit" class="submitbtn">Submit</button>
+                        </div>
+                    </div>
+                  </form> 
+            </div>
+        </section>
+        <main>
+            <ul class="list" list-style="null"></ul>
+        </main>
+    </body>
+</html>
