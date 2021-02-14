@@ -1,8 +1,15 @@
-// let search_form = document.querySelector(".control form");
-let create_form = document.querySelector(".create_modal form");
-let search_form = document.getElementById("search_form_id");
-// let list = document.getSelection(".list");
-let list = document.getElementsByClassName("list")[0];
+const create_form = document.querySelector(".create_modal form");
+const search_form = document.getElementById("search_form_id");
+const main = document.querySelector(".main");
+const list = document.getElementsByClassName("list")[0];
+var next_page = 0;
+var previous_page = 0;
+
+// console.log(main.nextbtn);
+
+$(document).ready( () => {
+    get_request( 0 );
+});
 
 // When the user clicks anywhere outside of the modal, close it
 window.onclick = function(event) {
@@ -49,16 +56,18 @@ create_form.addEventListener("submit", function(e){
 
 search_form.addEventListener("submit", function(e){
     e.preventDefault();
-    get_request();
+    get_request( 0 );
 });
 
 function create_form_close() {
     document.getElementById('create_modal_id').style.display='none';
 }
 
-async function get_request() {
-    url = "http://localhost:8080/api/v1/books?page=0&size=6";
-    
+async function get_request( page ) {
+    const size = 6;
+    var total_elem = 0;
+    const url = `http://localhost:8080/api/v1/books?page=${page}&size=${size}`
+
     fetch(url, {
         method: 'GET',
         headers: {
@@ -76,11 +85,22 @@ async function get_request() {
                 for( i = 0; i < json._embedded.bookDtoList.length; i++ ){
                     create_block(json._embedded.bookDtoList[i]);
                 }
+
                 list_sort( list );
             }
         }).catch( (error) => {
             console.error('Error: ', error);
     });
+    if( page < parseInt(total_elem / size) ){
+        next_page = page + 1;
+    } else{
+        next_page = page;
+    }
+    if( page == 0 ){
+        previous_page = page;
+    } else{
+        previous_page = page - 1;
+    }
 }
 
 function create_block( book_json ){
@@ -113,7 +133,6 @@ function list_sort( ul ){
         li_array.push(ul.childNodes[i]);
     }
 
-    // console.log(li_array[0].getElementsByClassName("satisfactionScore")[0].childNodes[0].innerText);
     // Sort the li_array in descending order
     li_array.sort(function(a, b){
         return parseInt(b.getElementsByClassName("satisfactionScore")[0].childNodes[0].innerText , 10) - 
