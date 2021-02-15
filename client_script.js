@@ -1,4 +1,5 @@
 const create_form = document.querySelector(".create_modal form");
+const update_form = document.querySelector(".update_modal form");
 const search_form = document.getElementById("search_form_id");
 const list = document.getElementsByClassName("list")[0];
 const main = document.querySelector("#main");
@@ -6,13 +7,8 @@ var next_page = 0;
 var previous_page = 0;
 
 $(document).ready( () => {
-    getRequest( 0 );
+    getAllRequest( 0 );
 });
-
-
-// var spans = document.getElementsByTagName('span');
-// spans[1].onclick = nextPage();
-// spans[2].onclick = prevPage();
 
 // When the user clicks anywhere outside of the modal, close it
 window.onclick = function(event) {
@@ -24,7 +20,7 @@ window.onclick = function(event) {
   }
 
 create_form.addEventListener("submit", function(e){
-    e.preventDefault();
+    // e.preventDefault();
     const in_bookName = document.getElementById("bookName").value;
     const in_issueNumber = document.getElementById("issueNumber").value;
     const in_publishDate = document.getElementById("publishDate").value;
@@ -57,16 +53,28 @@ create_form.addEventListener("submit", function(e){
     // })
 });
 
-search_form.addEventListener("submit", function(e){
-    e.preventDefault();
-    get_request( 0 );
+// search_form.addEventListener("submit", (e) => { get_request(0); });
+
+update_form.addEventListener("submit", (e) => {
+    // TODO readOne request 
+    let in_bookName = document.getElementById("bookName").value;
+    let in_issueNumber = document.getElementById("issueNumber").value;
+    let in_publishDate = document.getElementById("publishDate").value;
+    let in_description = document.getElementById("description").value;
+    let url = 'http://localhost:8080/api/v1/books/id=SimpsonsComics98';
+    // TODO fill in the form 
+    // TODO update request
 });
 
 function createFormClose() {
     document.getElementById('create_modal_id').style.display='none';
 }
 
-async function getRequest( page ) {
+function updateFormClose() {
+    document.getElementById('update_modal_id').style.display='none';
+}
+
+function getAllRequest( page ) {
     const size = 6;
     var total_elem = 0;
     const url = `http://localhost:8080/api/v1/books?page=${page}&size=${size}`;
@@ -86,7 +94,7 @@ async function getRequest( page ) {
                 alert("DB is empty");
             } else{
                 for( i = 0; i < json._embedded.bookDtoList.length; i++ ){
-                    create_block(json._embedded.bookDtoList[i]);
+                    createBlock(json._embedded.bookDtoList[i]);
                 }
                 listSort( list );
                 total_elem = json.page.totalElements;
@@ -110,15 +118,32 @@ async function getRequest( page ) {
     });
 }
 
-function create_block( book_json ){
+
+
+function createBlock( book_json ){
     bookName = book_json.bookName;
     issueNumber = book_json.issueNumber;
     bookId = bookName.replace(/\s/g, '') + issueNumber;
     satisfactionScore = book_json.satisfactionScore;
 
     let li = document.createElement("li");
+    li.id = bookId;
     li.classList.add("book");
-    // li.onclick = get_book();
+    li.onclick = function() {
+        // TODO get request
+        let in_bookName = document.getElementById("bookName").value;
+        let in_issueNumber = document.getElementById("issueNumber").value;
+        let in_publishDate = document.getElementById("publishDate").value;
+        let in_description = document.getElementById("description").value;
+        // console.log(this.id);
+        let url = `http://localhost:8080/api/v1/books/id=${this.id}`;
+        
+        fetch(url, () => {
+
+        })
+
+        document.getElementById('update_modal_id').style.display='block';
+    };
     let HTMLbox = `
         <h2 class="name">
             <span>${bookName}#${issueNumber}</span>
@@ -150,10 +175,6 @@ function listSort( ul ){
     for(var i = 0; i < li_array.length; i++){
         new_ul.appendChild(li_array[i]);
     }
-    // console.log(ul.parentNode);
-    // console.log(ul);
-    // console.log(new_ul);
-    // ul.parentNode.replaceChild(new_ul, ul);
     main.replaceChild(new_ul, main.childNodes[0]);
 }
 
@@ -180,9 +201,9 @@ function downRate( book ){
 // function get
 
 function nextPage(){
-    getRequest(next_page);
+    getAllRequest(next_page);
 }
 
 function prevPage(){
-    getRequest(previous_page);
+    getAllRequest(previous_page);
 }

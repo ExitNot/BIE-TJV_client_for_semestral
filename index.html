@@ -41,8 +41,8 @@
                         <label for="description"><b>Description</b></label>
                         <input type="text" placeholder="Enter Description" id="description" required>
                     
-                        <label for="imgUpload"><b>Upload your image</b></label>
-                        <input type="file" id="img" accept="image/*" />
+                        <!-- <label for="imgUpload"><b>Upload your image</b></label>
+                        <input type="file" id="img" accept="image/*" /> -->
 
                         <div class="acceptenceButtons">
                             <button type="button" class="cancelbtn" onclick="createFormClose();">Cancel</button>
@@ -51,11 +51,43 @@
                     </div>
                   </form> 
             </div>
+
+            <div id="update_modal_id" class="update_modal">
+                <span onclick="updateFormClose();" class="close" title="Update Modal">&times;</span>
+
+                <form class="update_form" id="update_form_id">  <!-- for img add , enctype="multipart/form-data"-->
+                    <div class="container">
+                        <h1>Create book</h1>
+                        <hr>
+                        <label for="bookName"><b>Book Name</b></label>
+                        <input type="text" placeholder="Enter Book Name" id="newBookName">
+                    
+                        <label for="issueNumber"><b>Issue Number</b></label>
+                        <input type="number" placeholder="Enter Issue Number" id="newIssueNumber">
+                    
+                        <label for="publishDate"><b>Publish Date</b></label>
+                        <input type="text" placeholder="Enter Publish Date" id="newPublishDate">
+                        
+                        <label for="description"><b>Description</b></label>
+                        <input type="text" placeholder="Enter Description" id="newDescription">
+                    
+                        <!-- <label for="imgUpload"><b>Upload your image</b></label>
+                        <input type="file" id="img" accept="image/*" /> -->
+
+                        <div class="acceptenceButtons">
+                            <button type="button" class="cancelbtn" onclick="updateFormClose();">Cancel</button>
+                            <button type="submit" class="submitbtn">Submit</button>
+                        </div>
+                    </div>
+                  </form> 
+            </div>
         </section>
         <div id="main">
+
             <ul class="list" list-style="null"></ul>
             <span class="prevbtn" onclick="prevPage();" style="float: left;"><i class="fas fa-arrow-alt-circle-right fa-2x fa-rotate-180"></i></button></span>
             <span class="nextbtn" onclick="nextPage();" style="float: right;"><i class="fas fa-arrow-alt-circle-right fa-2x"></i></button></span>
+
         </div>
         <!-- <main>
             
