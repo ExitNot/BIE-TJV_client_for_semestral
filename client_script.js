@@ -85,40 +85,58 @@ function getAllRequest( page ) {
             'Accept': 'application/json',
             authorization: 'Setler nepredsk4zuemo'
         }
-        }).then( async (response) => {
-            const json = await response.json();
+    }).then( async (response) => {
+        const json = await response.json();
 
-            // removing all li tags from ul
-            $(list).empty(); 
-            if( json.page.totalElements == 0 ){
-                alert("DB is empty");
-            } else{
-                for( i = 0; i < json._embedded.bookDtoList.length; i++ ){
-                    createBlock(json._embedded.bookDtoList[i]);
-                }
-                listSort( list );
-                total_elem = json.page.totalElements;
+        // removing all li tags from ul
+        $(list).empty(); 
+        if( json.page.totalElements == 0 ){
+            alert("DB is empty");
+        } else{
+            for( i = 0; i < json._embedded.bookDtoList.length; i++ ){
+                createBlock(json._embedded.bookDtoList[i]);
             }
-        }).then( () => {
-            // console.log(total_elem, " / ", size);
-            // console.log("total/size", parseInt(total_elem / size));
+            listSort( list );
+            total_elem = json.page.totalElements;
+        }
+    }).then( () => {
+        // console.log(total_elem, " / ", size);
+        // console.log("total/size", parseInt(total_elem / size));
 
-            if( page < parseInt(total_elem / size) )
-                next_page = page + 1;
-            else
-                next_page = page;
-            if( page == 0 )
-                previous_page = page;
-            else
-                previous_page = page - 1;
+        if( page < parseInt(total_elem / size) )
+            next_page = page + 1;
+        else
+            next_page = page;
+        if( page == 0 )
+            previous_page = page;
+        else
+            previous_page = page - 1;
 
-            // console.log( next_page, previous_page);
-        }).catch( (error) => {
-            console.error('Error: ', error);
+        // console.log( next_page, previous_page);
+    }).catch( (error) => {
+        console.error('Error: ', error);
     });
 }
 
+function getOneRequest( id ) {
+    let url = `http://localhost:8080/api/v1/books/id=${id}`;
+        
+    fetch(url, {
+        method: 'GET',
+        headers: {
+            'Accept': 'application/json',
+            authorization: 'Setler nepredsk4zuemo'
+        }
+    }).then( async (response) => {
+        const json = await response.json();
 
+        document.getElementById("newBookName").value = json.bookName;
+        document.getElementById("newIssueNumber").value = json.issueNumber;
+        document.getElementById("newPublishDate").value = json.publishDate;
+        document.getElementById("newDescription").value = json.description;
+        console.log(json);
+    })
+}
 
 function createBlock( book_json ){
     bookName = book_json.bookName;
@@ -131,16 +149,8 @@ function createBlock( book_json ){
     li.classList.add("book");
     li.onclick = function() {
         // TODO get request
-        let in_bookName = document.getElementById("bookName").value;
-        let in_issueNumber = document.getElementById("issueNumber").value;
-        let in_publishDate = document.getElementById("publishDate").value;
-        let in_description = document.getElementById("description").value;
         // console.log(this.id);
-        let url = `http://localhost:8080/api/v1/books/id=${this.id}`;
-        
-        fetch(url, () => {
-
-        })
+        getOneRequest( this.id );
 
         document.getElementById('update_modal_id').style.display='block';
     };
