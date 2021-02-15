@@ -20,7 +20,6 @@ window.onclick = function(event) {
   }
 
 create_form.addEventListener("submit", function(e){
-    // e.preventDefault();
     const in_bookName = document.getElementById("bookName").value;
     const in_issueNumber = document.getElementById("issueNumber").value;
     const in_publishDate = document.getElementById("publishDate").value;
@@ -43,8 +42,7 @@ create_form.addEventListener("submit", function(e){
         authorization : 'Setler nepredsk4zuemo'
     }
     }).catch(function(error){
-        alert('Error:', error);
-        // console.error('Error:', error);
+        console.error('Error:', error);
     });
 
     // .then( async function(response){
@@ -56,14 +54,28 @@ create_form.addEventListener("submit", function(e){
 // search_form.addEventListener("submit", (e) => { get_request(0); });
 
 update_form.addEventListener("submit", (e) => {
-    // TODO readOne request 
-    let in_bookName = document.getElementById("bookName").value;
-    let in_issueNumber = document.getElementById("issueNumber").value;
-    let in_publishDate = document.getElementById("publishDate").value;
-    let in_description = document.getElementById("description").value;
-    let url = 'http://localhost:8080/api/v1/books/id=SimpsonsComics98';
-    // TODO fill in the form 
-    // TODO update request
+    const in_publishDate = document.getElementById("newPublishDate").value;
+    const in_description = document.getElementById("newDescription").value;
+    let split = document.getElementById("newBookId").innerHTML.split("#");
+    const url = `http://localhost:8080/api/v1/books/id=${split[0].replace(/\s/g, '')}${split[1]}`;
+
+    const data = {
+        "bookName" : split[0],
+        "issueNumber" : parseInt(split[1], 10),
+        "publishDate" : in_publishDate,
+        "description" : in_description
+    };
+
+    fetch(url, {
+        method: 'PUT',
+        body: JSON.stringify(data),
+        headers: {
+            'Content-Type' : 'application/json',
+            authorization : 'Setler nepredsk4zuemo'
+    }
+    }).catch(function(error){
+        console.error('Error:', error);
+    });
 });
 
 function createFormClose() {
@@ -100,9 +112,6 @@ function getAllRequest( page ) {
             total_elem = json.page.totalElements;
         }
     }).then( () => {
-        // console.log(total_elem, " / ", size);
-        // console.log("total/size", parseInt(total_elem / size));
-
         if( page < parseInt(total_elem / size) )
             next_page = page + 1;
         else
@@ -111,8 +120,7 @@ function getAllRequest( page ) {
             previous_page = page;
         else
             previous_page = page - 1;
-
-        // console.log( next_page, previous_page);
+        
     }).catch( (error) => {
         console.error('Error: ', error);
     });
@@ -130,19 +138,20 @@ function getOneRequest( id ) {
     }).then( async (response) => {
         const json = await response.json();
 
-        document.getElementById("newBookName").value = json.bookName;
-        document.getElementById("newIssueNumber").value = json.issueNumber;
+        document.getElementById("newBookId").innerHTML = json.bookName + "#" + json.issueNumber;
         document.getElementById("newPublishDate").value = json.publishDate;
         document.getElementById("newDescription").value = json.description;
-        console.log(json);
+        // console.log(json);
+        let in_publishDate = document.getElementById("newPublishDate").value;
+        let in_description = document.getElementById("newDescription").value;
     })
 }
 
 function createBlock( book_json ){
-    bookName = book_json.bookName;
-    issueNumber = book_json.issueNumber;
-    bookId = bookName.replace(/\s/g, '') + issueNumber;
-    satisfactionScore = book_json.satisfactionScore;
+    let bookName = book_json.bookName;
+    let issueNumber = book_json.issueNumber;
+    let bookId = bookName.replace(/\s/g, '') + issueNumber;
+    let satisfactionScore = book_json.satisfactionScore;
 
     let li = document.createElement("li");
     li.id = bookId;
@@ -165,6 +174,23 @@ function createBlock( book_json ){
     li.innerHTML = HTMLbox;
     // li.style.backgroundImage = cover;    <img>
     list.appendChild(li);
+}
+
+function deleteBook( id ){
+    let split = document.getElementById("newBookId").innerHTML.split("#");
+    const url = `http://localhost:8080/api/v1/books?id=${split[0].replace(/\s/g, '')}${split[1]}`;
+    console.log(url);
+
+
+    fetch(url, {
+        method: 'DELETE',
+        headers: {
+            authorization : 'Setler nepredsk4zuemo'
+    }
+    }).catch(function(error){
+        console.error('Error:', error);
+    });
+    window.location.reload();
 }
 
 function listSort( ul ){

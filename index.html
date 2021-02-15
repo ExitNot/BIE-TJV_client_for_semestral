@@ -57,11 +57,9 @@
 
                 <form class="update_form" id="update_form_id">  <!-- for img add , enctype="multipart/form-data"-->
                     <div class="container">
-                        <label for="bookName"><b>Book Name</b></label>
-                        <input type="text" placeholder="Enter Book Name" id="newBookName">
-                    
-                        <label for="issueNumber"><b>Issue Number</b></label>
-                        <input type="number" placeholder="Enter Issue Number" id="newIssueNumber">
+                        <h1 id="newBookId"></h1>
+                        <span class="delete" onclick="deleteBook();" style="float: right;"><i class="fas fa-trash-alt fa-2x"></i></span>
+                        <hr>
                     
                         <label for="publishDate"><b>Publish Date</b></label>
                         <input type="text" placeholder="Enter Publish Date" id="newPublishDate">
@@ -87,8 +85,5 @@
             <span class="nextbtn" onclick="nextPage();" style="float: right;"><i class="fas fa-arrow-alt-circle-right fa-2x"></i></button></span>
 
         </div>
-        <!-- <main>
-            
-        </main> -->
     </body>
 </html>
